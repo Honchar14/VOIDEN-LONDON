@@ -59,11 +59,6 @@
   .pl .pbr.bri { right: -26px; bottom: -16px; border-right-width: 1px; border-bottom-width: 1px; }
   .pl.abs { position: absolute; }
   .pl > .trim { display: block; }
-  /* search icon uses the same plate hover; on the white fill the lens turns black */
-  #search { padding: 0; }
-  .pl .ico { display: block; width: 15px; height: 15px; }
-  .pl .ico img { display: block; }
-  .pfill .ico img { filter: invert(1); }
   .hdr-r { top: 30px; }
   .bagn { display: inline-flex; opacity: .5; transition: opacity .2s; }
   .bagn i { display: inline-block; font-style: normal; }
@@ -153,7 +148,6 @@
       <a href="#" class="pl tw"><span class="trim sc">Collections</span></a>
       <a href="#" class="pl tw"><span class="trim sc">Brand</span></a>
     </nav>
-    <button class="abs pl" id="search" aria-label="Search" style="left:1455px;top:30px;width:15px;height:15px"><span class="trim ico"><img src="assets/icon-search.svg" alt="" width="15" height="15"></span></button>
     <a href="#" class="abs ui hdr-r pl tw" id="login" style="left:1640px"><span class="trim sc">Log in</span></a>
     <a href="#" class="abs ui hdr-r pl tw" id="bag" style="right:30px" aria-label="Bag, 0 items"><span class="trim"><span class="sc">Bag</span> <span class="bagn" id="bagN"><i>0</i><i>0</i></span></span></a>
     <canvas class="fxlogo" id="logoHdr" aria-hidden="true" style="display:none"></canvas>
@@ -164,7 +158,7 @@
       <div class="dbar" aria-hidden="true"><i id="dbarFill"></i></div>
     </div>
     <p class="abs p18 trim" id="pL" style="left:30px;top:526px;width:435px;color:#000"><span class="ln sc">Discover the new collection, which applies</span><span class="ln sc">           technical innovation to</span><span class="ln sc"> natural materials</span><span class="ln sc">    including leather and wool, alongside</span><span class="ln sc">  new expressions of iconic</span><span class="ln sc">                        Voiden fabrications.</span></p>
-    <p class="abs p18" id="pR" style="left:1455px;top:332px;width:435px"><span class="ln sc">A study of darkness form and</span><span class="ln sc">          individuality</span><span class="ln sc">Twelve pieces One release.</span><span class="ln sc">                   Never reproduced.</span></p>
+    <p class="abs p18" id="pR" style="left:1436px;top:332px;width:454px"><span class="ln sc">A study of darkness form and</span><span class="ln sc">          individuality</span><span class="ln sc">Twelve pieces One release.</span><span class="ln sc">                   Never reproduced.</span></p>
     <canvas class="abs tag" id="tagL" aria-hidden="true" style="left:1424px;top:489px"></canvas>
     <div class="abs btnw" id="btnw">
       <a href="#" class="btn" id="btn"><span class="lbl trim"><span class="sc" id="btnTxt">ENTER THE DROP</span><span class="dots">...</span></span>
@@ -954,8 +948,6 @@ $$('.pl').forEach(a => {
     gsap.fromTo(br, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: .32, ease: 'expo.out', stagger: .025, overwrite: true });
     $$('.sc', a).forEach(s => typeIn(s, { cps: 70 }));
     $$('.sc', twin).forEach(s => typeIn(s, { cps: 70 }));
-    const ico = $$('.ico', a);   // icon has no text to re-type: the lens swings in instead
-    if (ico.length) gsap.fromTo(ico, { rotate: -35, scale: .7 }, { rotate: 0, scale: 1, duration: .5, ease: 'expo.out', overwrite: true });
   });
   a.addEventListener('mousemove', e => {
     if (!inside) return; const { x, y, w, h } = local(e);
@@ -1111,7 +1103,7 @@ function setInitial() {
   $$('.word').forEach(w => { if (w.__shade) gsap.ticker.remove(w.__shade); w.classList.remove('spin'); });
   $$('.word .ltr').forEach(g => { setReel(g, 0); g.removeAttribute('filter'); });
   gsap.set('.tag', { opacity: 0 });
-  gsap.set('.nav, #search, .hdr-r, .drop, #btnw', { opacity: 0 }); heroReady = false;
+  gsap.set('.nav, .hdr-r, .drop, #btnw', { opacity: 0 }); heroReady = false;
   [SprayTagE, SprayTagL, SprayHdr].forEach(sp => sp.clear());
   gsap.set('#pL .ln, #pR .ln', { opacity: 0 });
   gsap.set(grain, { opacity: .065 });
@@ -1206,7 +1198,7 @@ async function intro() {
   ex.set('#tagE', { opacity: .36 }, h + .35); ex.call(() => SprayTagE.play(3.2), null, h + .35);
   ex.set('#tagL', { opacity: .41 }, h + .5);  ex.call(() => SprayTagL.play(3), null, h + .5);
   // small type: typewriter (key by key, lines in turn)
-  ex.to('.nav, #search, .hdr-r, .drop, #btnw', { opacity: 1, duration: .01 }, h + .2);
+  ex.to('.nav, .hdr-r, .drop, #btnw', { opacity: 1, duration: .01 }, h + .2);
   ex.call(() => {
     $$('.nav .sc, .hdr-r .sc').forEach((el, i) => typeIn(el, { cps: 32, delay: i * .12 }));
     typeIn($('.drop .sc'), { cps: 32, delay: .1 }); revealCountdown(.45);
