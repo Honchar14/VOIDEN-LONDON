@@ -112,6 +112,16 @@
   .replay { position: fixed; right: 14px; bottom: 12px; z-index: 100; font-size: 11px; letter-spacing: -.3px;
             opacity: 0; color: #fff; mix-blend-mode: difference; transition: opacity .3s; }
   .replay:hover, .replay:focus-visible { opacity: .8; }
+
+  /* ---------- CURSOR: hairline cross, difference; over a link it turns into × ---------- */
+  .cur { position: fixed; left: 0; top: 0; width: 17px; height: 17px; margin: -8px 0 0 -8px; z-index: 200;
+         pointer-events: none; mix-blend-mode: difference; opacity: 0; transition: opacity .25s; will-change: transform; }
+  .cur i { position: absolute; display: block; width: 17px; height: 17px; }
+  .cur i::before, .cur i::after { content: ""; position: absolute; background: #fff; }
+  .cur i::before { left: 8px; top: 0; width: 1px; height: 17px; }
+  .cur i::after  { top: 8px; left: 0; height: 1px; width: 17px; }
+  .cur.on { opacity: 1; }
+  @media (hover: hover) and (pointer: fine) { html.has-cur, html.has-cur * { cursor: none !important; } }
 </style>
 <div class="viewport">
 <div class="stage" id="stage">
@@ -173,6 +183,7 @@
 </div>
 </div>
 <button class="replay" id="replay" title="Replay intro (R)">REPLAY ↻</button>
+<div class="cur" id="cur" aria-hidden="true"><i></i></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
@@ -1211,6 +1222,35 @@ const replay = () => { clearTimeout(cycleTimer); clearTimeout(hdrTimer); if (mas
   if (CH) CH.st.p = 0; busy = false; go(); };
 $('#replay').addEventListener('click', replay);
 addEventListener('keydown', e => { if (e.key === 'r' || e.key === 'R') replay(); });
+})();
+</script>
+<script>
+/* cursor: a 17 px hairline cross with a light lag; over links and buttons it turns 45° into × and grows, shrinks on press */
+(() => {
+  if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  const el = document.getElementById('cur'), x = el.firstElementChild, root = document.documentElement;
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let mx = -100, my = -100, px = -100, py = -100, hov = false, down = false, last = performance.now();
+  const set = () => gsap.to(x, { rotation: hov ? 45 : 0, scale: (hov ? 1.5 : 1) * (down ? .6 : 1),
+    duration: REDUCED ? 0 : down ? .12 : .45, ease: down ? 'power2.out' : 'expo.out', overwrite: true });
+  addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    mx = e.clientX; my = e.clientY;
+    if (!root.classList.contains('has-cur')) { root.classList.add('has-cur'); px = mx; py = my; }
+    el.classList.add('on');
+    const h = !!(e.target.closest && e.target.closest('a, button, [role="button"], label, select'));
+    if (h !== hov) { hov = h; set(); }
+  }, { passive: true });
+  addEventListener('pointerdown', () => { down = true; set(); });
+  addEventListener('pointerup', () => { down = false; set(); });
+  document.addEventListener('pointerleave', () => el.classList.remove('on'));
+  addEventListener('blur', () => el.classList.remove('on'));
+  (function tick(t) {
+    const k = REDUCED ? 1 : 1 - Math.pow(1 - .35, (t - last) / 16.67); last = t;
+    px += (mx - px) * k; py += (my - py) * k;
+    el.style.transform = `translate3d(${px}px, ${py}px, 0)`;
+    requestAnimationFrame(tick);
+  })(last);
 })();
 </script>
 
