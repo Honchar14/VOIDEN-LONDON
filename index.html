@@ -59,6 +59,11 @@
   .pl .pbr.bri { right: -26px; bottom: -16px; border-right-width: 1px; border-bottom-width: 1px; }
   .pl.abs { position: absolute; }
   .pl > .trim { display: block; }
+  /* search icon uses the same plate hover; on the white fill the lens turns black */
+  #search { padding: 0; }
+  .pl .ico { display: block; width: 15px; height: 15px; }
+  .pl .ico img { display: block; }
+  .pfill .ico img { filter: invert(1); }
   .hdr-r { top: 30px; }
   .bagn { display: inline-flex; opacity: .5; transition: opacity .2s; }
   .bagn i { display: inline-block; font-style: normal; }
@@ -148,7 +153,7 @@
       <a href="#" class="pl tw"><span class="trim sc">Collections</span></a>
       <a href="#" class="pl tw"><span class="trim sc">Brand</span></a>
     </nav>
-    <button class="abs fade" id="search" aria-label="Search" style="left:1455px;top:30px;width:15px;height:15px"><img src="assets/icon-search.svg" alt="" width="15" height="15"></button>
+    <button class="abs pl" id="search" aria-label="Search" style="left:1455px;top:30px;width:15px;height:15px"><span class="trim ico"><img src="assets/icon-search.svg" alt="" width="15" height="15"></span></button>
     <a href="#" class="abs ui hdr-r pl tw" id="login" style="left:1640px"><span class="trim sc">Log in</span></a>
     <a href="#" class="abs ui hdr-r pl tw" id="bag" style="right:30px" aria-label="Bag, 0 items"><span class="trim"><span class="sc">Bag</span> <span class="bagn" id="bagN"><i>0</i><i>0</i></span></span></a>
     <canvas class="fxlogo" id="logoHdr" aria-hidden="true" style="display:none"></canvas>
@@ -949,6 +954,8 @@ $$('.pl').forEach(a => {
     gsap.fromTo(br, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: .32, ease: 'expo.out', stagger: .025, overwrite: true });
     $$('.sc', a).forEach(s => typeIn(s, { cps: 70 }));
     $$('.sc', twin).forEach(s => typeIn(s, { cps: 70 }));
+    const ico = $$('.ico', a);   // icon has no text to re-type: the lens swings in instead
+    if (ico.length) gsap.fromTo(ico, { rotate: -35, scale: .7 }, { rotate: 0, scale: 1, duration: .5, ease: 'expo.out', overwrite: true });
   });
   a.addEventListener('mousemove', e => {
     if (!inside) return; const { x, y, w, h } = local(e);
