@@ -67,6 +67,8 @@
   #logoHdrS { mix-blend-mode: difference; }
   .p18 { font-size: 18px; letter-spacing: -1.8px; line-height: 1; white-space: pre; }
   .p18 .ln { display: block; min-height: 1em; }
+  .p16 { font-size: 16px; letter-spacing: -0.07em; line-height: 1.15; text-transform: uppercase; white-space: pre; }
+  .p16 .ln { display: block; min-height: 1.15em; }
   /* typewriter keys */
   .tk { opacity: 0; position: relative; }
   .tk.on { opacity: 1; animation: strike .16s ease-out; }   /* every line stays level and even; only a brief ink hit on the strike */
@@ -157,8 +159,8 @@
       <div class="drow"><i class="live" aria-hidden="true"></i><span class="sc">NEXT DROP:</span> <span class="cd" id="cd" aria-label="48 hours"></span><span class="cs" id="cs" aria-hidden="true">.00</span></div>
       <div class="dbar" aria-hidden="true"><i id="dbarFill"></i></div>
     </div>
-    <p class="abs p18 trim" id="pL" style="left:30px;top:526px;width:435px;color:#000"><span class="ln sc">Discover the new collection, which applies</span><span class="ln sc">           technical innovation to</span><span class="ln sc"> natural materials</span><span class="ln sc">    including leather and wool, alongside</span><span class="ln sc">  new expressions of iconic</span><span class="ln sc">                        Voiden fabrications.</span></p>
-    <p class="abs p18" id="pR" style="left:1603px;top:332px;width:293px"><span class="ln sc">A study of darkness</span><span class="ln sc">        form and individuality</span><span class="ln sc">Twelve pieces</span><span class="ln sc">              </span><span class="ln sc">              One release</span><span class="ln sc">              Never reproduced.</span></p>
+    <p class="abs trim p16" id="pL" style="left:30px;top:526px;width:409px;color:#000"><span class="ln sc">Discover the new collection, which applies</span><span class="ln sc">           technical innovation to</span><span class="ln sc"> natural materials</span><span class="ln sc">    including leather and wool, alongside</span><span class="ln sc">  new expressions of iconic</span><span class="ln sc">                        Voiden fabrications.</span></p>
+    <p class="abs p16" id="pR" style="left:1600px;top:335px;width:292px"><span class="ln sc">A study of darkness</span><span class="ln sc">        form and individuality</span><span class="ln sc">Twelve pieces</span><span class="ln sc">              </span><span class="ln sc">                One release</span><span class="ln sc">                Never reproduced.</span></p>
     <canvas class="abs tag" id="tagL" aria-hidden="true" style="left:1424px;top:489px"></canvas>
     <div class="abs btnw" id="btnw">
       <a href="#" class="btn" id="btn"><span class="lbl trim"><span class="sc" id="btnTxt">ENTER THE DROP</span><span class="dots">...</span></span>
@@ -1119,15 +1121,15 @@ async function intro() {
   if (REDUCED) tl.timeScale(3);
 
   // 1 — background + lines (fast, sharp)
-  tl.to('#preGrid .v', { scaleY: 1, duration: .75, ease: 'expo.inOut', stagger: { each: .06, from: 'edges' } }, .15);
-  tl.to('#preGrid .h', { scaleX: 1, duration: .8, ease: 'expo.inOut', stagger: .06 }, .3);
+  tl.to('#preGrid .v', { scaleY: 1, duration: .6, ease: 'expo.inOut', stagger: { each: .05, from: 'edges' } }, .1);
+  tl.to('#preGrid .h', { scaleX: 1, duration: .65, ease: 'expo.inOut', stagger: .05 }, .2);
 
   // 2 — the tag gets sprayed in the centre: fast, sharp; holds; then out
   const preLogo = SprayLogo.el;
-  tl.set(preLogo, { opacity: 1, scale: 1, filter: 'blur(0px)', x: 0 }, 1.0);
-  tl.call(() => { SprayLogo.play(.95); }, null, 1.0);
-  tl.to(preLogo, { opacity: 0, filter: 'blur(10px)', duration: .24, ease: 'power2.in' }, 2.75);
-  await new Promise(r => tl.call(r, null, 3.0));
+  tl.set(preLogo, { opacity: 1, scale: 1, filter: 'blur(0px)', x: 0 }, .55);
+  tl.call(() => { SprayLogo.play(.8); }, null, .55);
+  tl.to(preLogo, { opacity: 0, filter: 'blur(10px)', duration: .2, ease: 'power2.in' }, 1.9);
+  await new Promise(r => tl.call(r, null, 2.1));
   if (!alive() || !CH) return;
 
   // 3 — the grid comes alive: video jumps from cell to cell, sometimes several at once
@@ -1135,7 +1137,7 @@ async function intro() {
   const tiles = [mkTile(), mkTile(), mkTile()];
   const [main] = tiles;
   st.tiles = tiles;
-  const t0 = performance.now(), MIN = REDUCED ? 600 : 3300 / TS;
+  const t0 = performance.now(), MIN = REDUCED ? 600 : 2400 / TS;
   const usedCells = () => new Set(tiles.filter(t => t.on).map(t => t.ci));
   const pickCell = (avoid) => { const free = CELLS.map((c, i) => i).filter(i => !avoid.has(i)); return free[(R() * free.length) | 0]; };
   const pickChar = (not) => { let c; do { c = (R() * 4) | 0; } while (c === not); return c; };
@@ -1143,8 +1145,8 @@ async function intro() {
   cutTile(main, CENTER, pickChar(-1), 0, { first: true });
   // rhythm: a scored sequence (M = main jumps, A/B = extra tiles: + appear/jump, - drop), then free play if still loading
   const score = [                          // gap before each beat — long gaps are holds: the video lingers in its square
-    [.45, 'M'], [.24, 'M'], [.65, 'M A+'], [.18, 'A+'], [.18, 'M B+'], [.55, 'A-'], [.16, 'M'], [.18, 'A+'],
-    [.5, 'B+ M'], [.16, 'B-'], [.18, 'M B+'], [.55, 'A-'], [.16, 'M'], [.18, 'B-'], [.45, 'M']];
+    [.3, 'M'], [.2, 'M A+'], [.45, 'A+'], [.16, 'M B+'], [.4, 'A-'], [.16, 'M'], [.16, 'B+ A+'],
+    [.4, 'M'], [.16, 'B-'], [.16, 'A-'], [.3, 'M']];
   const [, A, B] = tiles;
   const jump = (t, flip) => { const avoid = usedCells(); if (t.on) avoid.delete(t.ci); avoid.add(t.ci);
     cutTile(t, pickCell(avoid), pickChar(t.char), flip ? 1 - t.pol : (R() < .45 ? 1 : 0)); };
@@ -1161,15 +1163,15 @@ async function intro() {
       else jump(t, t === main && R() < .5);
     });
     const done = b >= score.length && performance.now() - t0 >= MIN && loaded.n >= loaded.total;
-    if (done || performance.now() - t0 > 9000 / TS) break;
+    if (done || performance.now() - t0 > 6500 / TS) break;
   }
   if (!alive()) return;
 
   // 4 — everything clears, the centre cell lands on the hero and blows open
   tiles.filter(t => t !== main && t.on).forEach((t, i) => gsap.delayedCall(i * .05, () => dropTile(t)));
-  await wait(.12);
+  await wait(.08);
   cutTile(main, CENTER, HERO_IDX, 0, { hero: true });
-  await wait(.42);
+  await wait(.32);
   if (!alive()) return;
   // hand the centre tile over to the single-subject renderer (same player → no jump in the video)
   Object.assign(st, { a: HERO_IDX, b: HERO_IDX, p: 0, invA: 0, bg: 1, zoom: 1, flash: 0, expo: 1, jx: 0, jb: 0, tear: 0,
